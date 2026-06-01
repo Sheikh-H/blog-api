@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request
 import os
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
-from services.db import add_post
+from services.db import add_post, delete_post, get_post
 
 app = Flask(__name__)
 
@@ -11,20 +11,55 @@ limiter = Limiter(key_func=get_remote_address, app=app)
 
 @app.route("/posts", methods=["POST"])
 @limiter.limit("50 per hour")
-def adding_post():
+def add():
     data = request.json
-    if (
-        not data["title"]
-        or not data["content"]
-        or not data["category"]
-        or not data["tags"]
-    ):
+    if not data.get("title"):
+        return {"Error": "Unable to add post, please use all required fields"}, 400
+    if not data.get("content"):
+        return {"Error": "Unable to add post, please use all required fields"}, 400
+    if not data.get("category"):
+        return {"Error": "Unable to add post, please use all required fields"}, 400
+    if not data.get("tags"):
         return {"Error": "Unable to add post, please use all required fields"}, 400
     try:
         add_post(data)
         return {"Success": f"{data['title']} post added"}, 201
     except Exception as e:
+        return {"Error": f"{e}"}, 500
+
+
+@app.route("/posts/<int:_id>", methods=["DELETE"])
+@limiter.limit("50 per hour")
+def delete(_id):
+    _id = int(_id)
+    try:
+        result = delete_post(_id)
+        if result == True:
+            return {"Success": "Post deleted"}, 204
+        if result == False:
+            return {"Error": "Unable to delete post"}, 404
+    except Exception as e:
         return {"Error": f"{e}"}, 400
+
+
+@app.route("/posts/<int:_id>", methods=["GET"])
+@limiter.limit("50 per hour")
+def get_one(_id):
+    _id = int(_id)
+    result = get_post(_id)
+    if not result:
+        return {"Error": "Post not found"}, 400
+    return {
+        "Succes": {
+            "id": result["id"],
+            "title": result["title"],
+            "content": result["content"],
+            "category": result["category"],
+            "tags": result["tags"],
+            "CreatedAt": result["createdAt"],
+            "UpdatedAt": result["updatedAt"],
+        }
+    }, 200
 
 
 if __name__ == "__main__":
