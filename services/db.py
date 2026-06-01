@@ -2,8 +2,7 @@ from pymongo import MongoClient
 import os
 from dotenv import load_dotenv
 from datetime import datetime
-from flask import jsonify, request
-import requests
+from flask import jsonify
 
 load_dotenv()
 
@@ -13,25 +12,17 @@ table = db["posts"]
 
 
 def add_post(data):
-    now = str(datetime.now().replace(microsecond=0))
-    if (
-        not data["title"]
-        or not data["content"]
-        or not data["category"]
-        or not data["tags"]
-    ):
-        return {"Error": "Unable to add post, please use all required fields"}, 400
-
+    now = f"{datetime.now().replace(microsecond=0)}"
+    last_post = table.find_one(sort=[("id", -1)])
+    _id = 1 if not last_post else last_post['id'] + 1
     new_post = {
+        "id": _id,
         "title": data["title"],
         "content": data["content"],
         "category": data["category"],
         "tags": data["tags"],
         "createdAt": now,
-        "updatedAt": None,
+        "updatedAt": "Null",
     }
-    try:
-        table.insert_one(new_post)
-        return {"Success": f"{data['title']} post added!"}, 201
-    except Exception as e:
-        return {"Error": "{e}"}, 400
+    table.insert_one(new_post)
+    return True
