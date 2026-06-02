@@ -20,18 +20,18 @@ limiter = Limiter(key_func=get_remote_address, app=app)
 def add():
     data = request.json
     if not data.get("title"):
-        return {"Error": "Unable to add post, please use all required fields"}, 400
+        return {"error": "unable to add post, please use all required fields"}, 400
     if not data.get("content"):
-        return {"Error": "Unable to add post, please use all required fields"}, 400
+        return {"error": "unable to add post, please use all required fields"}, 400
     if not data.get("category"):
-        return {"Error": "Unable to add post, please use all required fields"}, 400
+        return {"error": "unable to add post, please use all required fields"}, 400
     if not data.get("tags"):
-        return {"Error": "Unable to add post, please use all required fields"}, 400
+        return {"error": "unable to add post, please use all required fields"}, 400
     try:
         post = add_post(data)
         return jsonify(post), 201
     except Exception as e:
-        return {"Error": f"{e}"}, 500
+        return {"error": f"{e}"}, 500
 
 
 @app.route("/posts/<int:_id>", methods=["GET"])
@@ -42,7 +42,7 @@ def fetch_post(_id):
     if post:
         return jsonify(post), 200
     else:
-        return {"Error": "Post not found"}, 404
+        return {"error": "post not found"}, 404
 
 
 @app.route("/posts", methods=["GET"])
@@ -54,7 +54,7 @@ def posts():
         if posts:
             return jsonify(posts), 200
         else:
-            return {"Error": "No posts"}, 404
+            return {"error": "no posts"}, 404
     else:
         searched = search_posts(term)
         if searched:
@@ -72,9 +72,9 @@ def delete(_id):
         if result:
             return "", 204
         else:
-            return {"Error": "Unable to delete post"}, 404
+            return {"error": "unable to delete post"}, 404
     except:
-        return {"Error": "Unable to delete post"}, 404
+        return {"error": "unable to delete post"}, 404
 
 
 @app.route("/posts/<int:_id>", methods=["PUT"])
