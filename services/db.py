@@ -98,8 +98,8 @@ def search_posts(term):
         {
             "$or": [
                 {"title": {"$regex": str(term), "$options": "i"}},
-                {"tags": {"$regex": str(term), "$options": "i"}},
                 {"category": {"$regex": str(term), "$options": "i"}},
+                {"content": {"$regex": str(term), "$options": "i"}},
             ]
         },
         {
