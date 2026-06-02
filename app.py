@@ -51,3 +51,19 @@ def delete(_id):
     except:
         return {"Error": "Unable to delete post"}, 404
 
+
+@app.route("/posts/<int:_id>", methods=["PUT"])
+def update(_id):
+    _id = int(_id)
+    post = request.json
+    for key, value in post.items():
+        if key not in ['title', 'content', 'category', 'tags']:
+            break
+    for key, value in post.items():
+        result = update_post(_id, key, value)
+    if result == "updated":
+        return {"success": "post updated"}, 201
+    elif result == "not found":
+        return {"error": "post not found"}, 404
+    elif result == "unable to update":
+        return {"error": "Unable to update"}, 400

@@ -57,29 +57,14 @@ def delete_post(_id):
         return None
 
 
-def update_post(_id, post):
+def update_post(_id, key, value):
     now = f"{datetime.now().replace(microsecond=0)}"
-    print(post)
-    if post.get("title"):
-        result = table.find_one_and_update(
-            {"id": _id},
-            {"$set": {"title": post["title"], "updatedAt": now}},
-        )
-        return result
-    elif post.get("content"):
-        result = table.find_one_and_update(
-            {"id": _id}, {"$set": {"content": post["content"], "updatedAt": now}}
-        )
-        return result
-    elif post.get("tags"):
-        result = table.find_one_and_update(
-            {"id": _id}, {"$set": {"tags": post["tags"], "updatedAt": now}}
-        )
-        return result
-    elif post.get("category"):
-        result = table.find_one_and_update(
-            {"id": _id}, {"$set": {"category": post["category"], "updatedAt": now}}
-        )
-        return result
+    post = table.find_one({"id":_id})
+    if not post:
+        return "not found"
     else:
-        return None
+        try:
+            table.find_one_and_update({"id": _id}, {"$set": {key: value, "updatedAt": now}})
+            return "updated"
+        except:
+            return "unable to update"
