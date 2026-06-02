@@ -62,6 +62,15 @@ def get_one(_id):
     }, 200
 
 
+@app.route("/post/<int:_id>", methods=['UPDATE'])
+@limiter.limit("50 per hour")
+def update_one(_id):
+    _id = int(_id)
+    data = request.json
+    if not any(data.get('title'), data.get('content'), data.get('category'), data.get('tags')):
+        return {"Error": "Please enter at least one of the fields you would like to update"}, 400
+    
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(debug=True, port=port, host="127.0.0.1")

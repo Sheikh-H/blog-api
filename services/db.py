@@ -43,3 +43,24 @@ def get_post(_id):
         return post
     if not post:
         return None
+
+
+def update_post(_id, data):
+    post = table.find_one({"id": _id})
+    if not post:
+        return False
+    else:
+        if data.get("content"):
+            table.find_one_and_update({"id": _id}, {"content": data["content"]})
+            return True
+        elif data.get("title"):
+            table.find_one_and_update({"id": _id}, {"title": data["title"]})
+            return True
+        elif data.get("category"):
+            table.find_one_and_update({"id": _id}, {"category": data["category"]})
+            return True
+        elif data.get("tags"):
+            table.find_one_and_update({"id": _id}, {"tags": data["tags"]})
+            return True
+        else:
+            
