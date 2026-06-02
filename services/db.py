@@ -46,21 +46,30 @@ def get_post(_id):
 
 
 def update_post(_id, data):
+    now = f"{datetime.now().replace(microsecond=0)}"
     post = table.find_one({"id": _id})
     if not post:
-        return False
+        return "Not found"
     else:
         if data.get("content"):
-            table.find_one_and_update({"id": _id}, {"content": data["content"]})
+            table.find_one_and_update(
+                {"id": _id}, {"$set": {"content": data["content"], "updatedAt": now}}
+            )
             return True
         elif data.get("title"):
-            table.find_one_and_update({"id": _id}, {"title": data["title"]})
+            table.find_one_and_update(
+                {"id": _id}, {"$set": {"title": data["title"], "updatedAt": now}}
+            )
             return True
         elif data.get("category"):
-            table.find_one_and_update({"id": _id}, {"category": data["category"]})
+            table.find_one_and_update(
+                {"id": _id}, {"$set": {"category": data["category"], "updatedAt": now}}
+            )
             return True
         elif data.get("tags"):
-            table.find_one_and_update({"id": _id}, {"tags": data["tags"]})
+            table.find_one_and_update(
+                {"id": _id}, {"$set": {"tags": data["tags"], "updatedAt": now}}
+            )
             return True
         else:
-            
+            return "Not Updated"

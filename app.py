@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request
 import os
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
-from services.db import add_post, delete_post, get_post
+from services.db import add_post, delete_post, get_post, update_post
 
 app = Flask(__name__)
 
@@ -62,14 +62,25 @@ def get_one(_id):
     }, 200
 
 
-@app.route("/post/<int:_id>", methods=['UPDATE'])
+@app.route("/posts/<int:_id>", methods=["PUT"])
 @limiter.limit("50 per hour")
 def update_one(_id):
     _id = int(_id)
     data = request.json
-    if not any(data.get('title'), data.get('content'), data.get('category'), data.get('tags')):
-        return {"Error": "Please enter at least one of the fields you would like to update"}, 400
-    
+    # if not any(
+    #     data.get("title"), data.get("content"), data.get("category"), data.get("tags")
+    # ):
+    #     return {
+    #         "Error": "Please enter at least one of the fields you would like to update"
+    #     }, 400
+    result = update_post(_id, data)
+    if result == True:
+        return {"Success": "Post Updated!"}, 200
+    elif result == "Not found":
+        return {"Error": "Post not found"}, 404
+    elif result == "Not Updated":
+        return {"Error": "Unable to update"}, 400
+
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
