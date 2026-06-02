@@ -73,3 +73,45 @@ def update_post(_id, data):
             return True
         else:
             return "Not Updated"
+
+
+def get_all():
+    data = table.find(
+        {},
+        {
+            "_id": 0,
+            "id": 1,
+            "title": 1,
+            "content": 1,
+            "category": 1,
+            "tags": 1,
+            "createdAt": 1,
+            "updatedAt": 1,
+        },
+    )
+    data = list(data)
+    return data
+
+
+def search_post(search):
+    data = table.find(
+        {
+            "$or": [
+                {"title": {"$regex": str(search), "$options": "i"}},
+                {"tags": {"$regex": str(search), "$options": "i"}},
+                {"category": {"$regex": str(search), "$options": "i"}},
+            ]
+        },
+        {
+            "_id": 0,
+            "id": 1,
+            "title": 1,
+            "content": 1,
+            "category": 1,
+            "tags": 1,
+            "createdAt": 1,
+            "updatedAt": 1,
+        },
+    )
+    list(data)
+    return data
