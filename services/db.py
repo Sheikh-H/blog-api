@@ -28,93 +28,30 @@ def add_post(data):
     return True
 
 
-def delete_post(_id):
-    try:
-        table.delete_one({"id": _id})
-        return True
-    except Exception as e:
-        print(e)
-        return False
-
-
 def get_post(_id):
-    post = table.find_one({"id": _id})
+    post = table.find_one(
+        {"id": _id},
+        {
+            "_id": 0,
+            "id": 1,
+            "title": 1,
+            "content": 1,
+            "category": 1,
+            "tags": 1,
+            "createdAt": 1,
+            "updatedAt": 1,
+        },
+    )
     if post:
+        list(post)
         return post
-    if not post:
+    else:
         return None
 
 
-def update_post(_id, data):
-    now = f"{datetime.now().replace(microsecond=0)}"
-    post = table.find_one({"id": _id})
-    if not post:
-        return "Not found"
-    else:
-        if data.get("content"):
-            table.find_one_and_update(
-                {"id": _id}, {"$set": {"content": data["content"], "updatedAt": now}}
-            )
-            return True
-        elif data.get("title"):
-            table.find_one_and_update(
-                {"id": _id}, {"$set": {"title": data["title"], "updatedAt": now}}
-            )
-            return True
-        elif data.get("category"):
-            table.find_one_and_update(
-                {"id": _id}, {"$set": {"category": data["category"], "updatedAt": now}}
-            )
-            return True
-        elif data.get("tags"):
-            table.find_one_and_update(
-                {"id": _id}, {"$set": {"tags": data["tags"], "updatedAt": now}}
-            )
-            return True
-        else:
-            return "Not Updated"
-
-
-def get_all():
-    data = table.find(
-        {},
-        {
-            "_id": 0,
-            "id": 1,
-            "title": 1,
-            "content": 1,
-            "category": 1,
-            "tags": 1,
-            "createdAt": 1,
-            "updatedAt": 1,
-        },
-    )
-    data = list(data)
-    return data
-
-
-def search_post(search):
-    data = table.find(
-        {
-            "$or": [
-                {"title": {"$regex": str(search), "$options": "i"}},
-                {"tags": {"$regex": str(search), "$options": "i"}},
-                {"category": {"$regex": str(search), "$options": "i"}},
-            ]
-        },
-        {
-            "_id": 0,
-            "id": 1,
-            "title": 1,
-            "content": 1,
-            "category": 1,
-            "tags": 1,
-            "createdAt": 1,
-            "updatedAt": 1,
-        },
-    )
-    if data:
-        list(data)
-        return data
+def delete_post(_id):
+    result = table.find_one_and_delete({"id": _id})
+    if result:
+        return True
     else:
         return None
