@@ -86,21 +86,19 @@ def update_one(_id):
 @app.route("/posts", methods=["GET"])
 @limiter.limit("50 per hour")
 def get_posts():
-    data = get_all()
-    if not data:
-        return {"Error": "No posts found"}, 404
-    return jsonify(data), 200
-
-
-@app.route("/post", methods=["GET"])
-@limiter.limit("50 per hour")
-def get_search():
-    term = request.args.get("term")
-    result = search_post(term)
-    if result:
-        return result, 200
+    if not request.args.get("term"):
+        data = get_all()
+        if not data:
+            return {"Error": "No posts found"}, 404
+        return jsonify(data), 200
     else:
-        return {"Error": "Post not found"}, 404
+        term = request.args.get("term")
+        result = search_post(term)
+        if result:
+            return result, 200
+        else:
+            return {"Error": "Post not found"}, 404
+
 
 
 if __name__ == "__main__":
