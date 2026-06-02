@@ -59,12 +59,62 @@ def delete_post(_id):
 
 def update_post(_id, key, value):
     now = f"{datetime.now().replace(microsecond=0)}"
-    post = table.find_one({"id":_id})
+    post = table.find_one({"id": _id})
     if not post:
         return "not found"
     else:
         try:
-            table.find_one_and_update({"id": _id}, {"$set": {key: value, "updatedAt": now}})
+            table.find_one_and_update(
+                {"id": _id}, {"$set": {key: value, "updatedAt": now}}
+            )
             return "updated"
         except:
             return "unable to update"
+
+
+def get_posts():
+    posts = table.find(
+        {},
+        {
+            "_id": 0,
+            "id": 1,
+            "title": 1,
+            "content": 1,
+            "category": 1,
+            "tags": 1,
+            "createdAt": 1,
+            "updatedAt": 1,
+        },
+    )
+    if posts:
+        posts = list(posts)
+        return posts
+    else:
+        return None
+
+
+def search_posts(term):
+    posts = table.find(
+        {
+            "$or": [
+                {"title": {"$regex": str(term), "$options": "i"}},
+                {"tags": {"$regex": str(term), "$options": "i"}},
+                {"category": {"$regex": str(term), "$options": "i"}},
+            ]
+        },
+        {
+            "_id": 0,
+            "id": 1,
+            "title": 1,
+            "content": 1,
+            "category": 1,
+            "tags": 1,
+            "createdAt": 1,
+            "updatedAt": 1,
+        },
+    )
+    if posts:
+        posts = list(posts)
+        return posts
+    else:
+        return None
