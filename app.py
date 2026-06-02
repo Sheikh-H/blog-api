@@ -58,7 +58,7 @@ def update(_id):
     post = request.json
     for key, value in post.items():
         if key not in ['title', 'content', 'category', 'tags']:
-            break
+            return {"error":"unable to update"}, 400
     for key, value in post.items():
         result = update_post(_id, key, value)
     if result == "updated":
