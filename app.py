@@ -67,9 +67,7 @@ def get_one(_id):
 def update_one(_id):
     _id = int(_id)
     data = request.json
-    # if not any(
-    #     data.get("title"), data.get("content"), data.get("category"), data.get("tags")
-    # ):
+    # if not any(data["title"], data["content"], data["category"], data["tags"]):
     #     return {
     #         "Error": "Please enter at least one of the fields you would like to update"
     #     }, 400
