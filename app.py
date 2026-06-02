@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
-from services.db import add_post, get_post, delete_post
+from services.db import add_post, get_post, delete_post, update_post
 
 app = Flask(__name__)
 
@@ -50,3 +50,4 @@ def delete(_id):
             return {"Error": "Unable to delete post"}, 404
     except:
         return {"Error": "Unable to delete post"}, 404
+

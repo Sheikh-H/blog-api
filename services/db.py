@@ -55,3 +55,31 @@ def delete_post(_id):
         return True
     else:
         return None
+
+
+def update_post(_id, post):
+    now = f"{datetime.now().replace(microsecond=0)}"
+    print(post)
+    if post.get("title"):
+        result = table.find_one_and_update(
+            {"id": _id},
+            {"$set": {"title": post["title"], "updatedAt": now}},
+        )
+        return result
+    elif post.get("content"):
+        result = table.find_one_and_update(
+            {"id": _id}, {"$set": {"content": post["content"], "updatedAt": now}}
+        )
+        return result
+    elif post.get("tags"):
+        result = table.find_one_and_update(
+            {"id": _id}, {"$set": {"tags": post["tags"], "updatedAt": now}}
+        )
+        return result
+    elif post.get("category"):
+        result = table.find_one_and_update(
+            {"id": _id}, {"$set": {"category": post["category"], "updatedAt": now}}
+        )
+        return result
+    else:
+        return None
