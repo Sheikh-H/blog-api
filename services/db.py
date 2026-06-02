@@ -7,8 +7,8 @@ from flask import jsonify
 load_dotenv()
 
 client = MongoClient(os.environ.get("MONGO_URI"))
-db = client["blog"]
-table = db["posts"]
+db = client["rdmpsh-blog"]
+table = db["blog-posts"]
 
 
 def add_post(data):
@@ -113,5 +113,8 @@ def search_post(search):
             "updatedAt": 1,
         },
     )
-    list(data)
-    return data
+    if data:
+        list(data)
+        return data
+    else:
+        return None

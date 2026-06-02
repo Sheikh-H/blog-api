@@ -8,7 +8,7 @@ from services.db import (
     get_post,
     update_post,
     get_all,
-    search_post
+    search_post,
 )
 
 app = Flask(__name__)
@@ -30,7 +30,7 @@ def add():
         return {"Error": "Unable to add post, please use all required fields"}, 400
     try:
         add_post(data)
-        return {"Success": f"{data['title']} post added"}, 201
+        return {"Success": f"'{data['title']}' post added"}, 201
     except Exception as e:
         return {"Error": f"{e}"}, 500
 
@@ -95,10 +95,9 @@ def get_posts():
         term = request.args.get("term")
         result = search_post(term)
         if result:
-            return result, 200
+            return jsonify(result), 200
         else:
             return {"Error": "Post not found"}, 404
-
 
 
 if __name__ == "__main__":
