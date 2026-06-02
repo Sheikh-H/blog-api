@@ -25,7 +25,20 @@ def add_post(data):
         "updatedAt": "Null",
     }
     table.insert_one(new_post)
-    return True
+    post = table.find_one(
+        {"id": _id},
+        {
+            "_id": 0,
+            "id": 1,
+            "title": 1,
+            "content": 1,
+            "category": 1,
+            "tags": 1,
+            "createdAt": 1,
+            "updatedAt": 1,
+        },
+    )
+    return post
 
 
 def get_post(_id):
@@ -67,7 +80,20 @@ def update_post(_id, key, value):
             table.find_one_and_update(
                 {"id": _id}, {"$set": {key: value, "updatedAt": now}}
             )
-            return "updated"
+            post = table.find_one(
+                {"id": _id},
+                {
+                    "_id": 0,
+                    "id": 1,
+                    "title": 1,
+                    "content": 1,
+                    "category": 1,
+                    "tags": 1,
+                    "createdAt": 1,
+                    "updatedAt": 1,
+                },
+            )
+            return post
         except:
             return "unable to update"
 

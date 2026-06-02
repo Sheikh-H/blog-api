@@ -28,8 +28,8 @@ def add():
     if not data.get("tags"):
         return {"Error": "Unable to add post, please use all required fields"}, 400
     try:
-        add_post(data)
-        return {"Success": f"'{data['title']}' post added"}, 201
+        post = add_post(data)
+        return jsonify(post), 201
     except Exception as e:
         return {"Error": f"{e}"}, 500
 
@@ -42,7 +42,7 @@ def fetch_post(_id):
     if post:
         return jsonify(post), 200
     else:
-        return {"Error", "Post not found"}, 404
+        return {"Error": "Post not found"}, 404
 
 
 @app.route("/posts", methods=["GET"])
@@ -86,8 +86,8 @@ def update(_id):
             return {"error": "unable to update"}, 400
     for key, value in post.items():
         result = update_post(_id, key, value)
-    if result == "updated":
-        return {"success": "post updated"}, 201
+    if result:
+        return jsonify(result), 200
     elif result == "not found":
         return {"error": "post not found"}, 404
     elif result == "unable to update":
