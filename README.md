@@ -1,237 +1,750 @@
-# 🧠 PulseBlog API: Personal Blogging Platform RESTful Service
+# 📚 AtlasBlog API
 
 <p align="center">
-  <b>A lightweight, secure RESTful API for managing personal blog posts using Flask and MongoDB.</b><br>
-  Built for speed, simplicity, and clean CRUD operations.
+  <strong>A RESTful blogging platform API built with Flask and MongoDB.</strong><br>
+  Create, manage, search and organise blog posts through a clean and lightweight backend service.
 </p>
 
 ---
 
-## 📘 Project Overview
+## 📖 Overview
 
-**PulseBlog API** is a RESTful blogging backend built in Python using Flask and MongoDB. It was developed as a solution to the Roadmap.sh project:
+AtlasBlog API is a RESTful backend application that provides all the core functionality required to power a blogging platform.
 
-👉 https://roadmap.sh/projects/blogging-platform-api
+The application allows users to create, retrieve, update, delete and search blog posts while storing data in MongoDB. It was built using Flask and follows a simple separation-of-concerns architecture where route handling and database operations are kept separate.
 
-The API allows users to create, read, update, delete, and search blog posts with full CRUD functionality. It is designed to be simple to integrate with tools such as Postman or any frontend application.
+This project was developed as part of the roadmap.sh Backend Projects collection and demonstrates practical backend development concepts including:
 
----
-
-## ✨ Features
-
-- Create new blog posts
-- Retrieve all posts
-- Retrieve a single post by ID
-- Update one or multiple fields of a post
-- Delete posts
-- Search posts using a keyword (title, content, category)
-- MongoDB persistence (NoSQL)
-- Basic rate limiting (Flask-Limiter)
-- Timestamp tracking (createdAt / updatedAt)
+- REST API design
+- CRUD operations
+- Database integration
+- Environment variable management
+- Request validation
+- Rate limiting
+- Search functionality
+- API testing with Postman
 
 ---
 
-## 🧰 Tech Stack
+# ✨ Features
 
-- Python 3.8+
-- Flask
-- MongoDB (Atlas or local)
-- PyMongo
-- Flask-Limiter
-- python-dotenv
+### Blog Post Management
+
+- Create blog posts
+- Retrieve all blog posts
+- Retrieve a specific blog post by ID
+- Update existing blog posts
+- Delete blog posts
+
+### Search Functionality
+
+Search blog posts by:
+
+- Title
+- Content
+- Category
+
+Searches are case-insensitive and use MongoDB regular expressions.
+
+### Data Persistence
+
+All blog posts are stored in MongoDB, ensuring data remains available between application restarts.
+
+### Timestamp Tracking
+
+Every post contains:
+
+- `createdAt`
+- `updatedAt`
+
+allowing changes to be tracked over time.
+
+### Rate Limiting
+
+Most endpoints are protected using Flask-Limiter:
+
+```text
+50 requests per hour
+```
+
+This helps prevent excessive requests and basic abuse.
 
 ---
 
-## 📁 Project Structure
+# 🛠 Technology Stack
 
-<pre>
-PulseBlog/
+| Technology    | Purpose                         |
+| ------------- | ------------------------------- |
+| Python        | Programming language            |
+| Flask         | Web framework                   |
+| MongoDB       | NoSQL database                  |
+| PyMongo       | MongoDB driver                  |
+| Flask-Limiter | Rate limiting                   |
+| python-dotenv | Environment variable management |
+
+---
+
+# 🏗 Architecture
+
+The application follows a layered structure:
+
+```text
+Client
+   │
+   ▼
+Flask Routes (app.py)
+   │
+   ▼
+Database Service Layer (services/db.py)
+   │
+   ▼
+MongoDB Database
+```
+
+### Why This Structure?
+
+Separating route logic from database logic makes the code:
+
+- Easier to maintain
+- Easier to test
+- Easier to expand
+- More readable
+
+The route handlers focus on:
+
+- Receiving requests
+- Validating input
+- Returning HTTP responses
+
+The service layer focuses on:
+
+- Database operations
+- Query execution
+- Data retrieval
+- Data updates
+
+---
+
+# 📂 Project Structure
+
+```text
+AtlasBlog-API/
 │
-├── app.py              # Flask API routes
+├── app.py
 ├── services/
-│   └── db.py           # Database logic (MongoDB operations)
-├── .env                # Environment variables (MongoDB URI)
-├── requirements.txt    # Dependencies
-├── LICENSE             # MIT LICENSE
-└── README.md           # Documentation
-</pre>
+|   ├── app.py
+│   └── db.py
+│
+├── requirements.txt
+├── LICENSE
+├── README.md
+│
+└── venv/
+```
+
+## File Breakdown
+
+### app.py
+
+Contains:
+
+- Flask application setup
+- Route definitions
+- Request validation
+- Rate limiting configuration
+- HTTP responses
+
+### services/db.py
+
+Contains:
+
+- MongoDB connection
+- CRUD operations
+- Search functionality
+- Timestamp handling
+
+### requirements.txt
+
+Lists all Python dependencies required to run the project.
+I just used `pip freeze > requirements.txt` to make the file.
+
+### LICENSE
+
+Contains the project's MIT Licence.
 
 ---
 
-## ⚙️ Setup Instructions
+# ⚙️ Installation
 
-### 1. Clone the repository
-<pre>
-git clone https://github.com/yourusername/pulseblog-api.git
-cd pulseblog-api
-</pre>
+## 1. Clone the Repository
+
+```bash
+git clone https://github.com/yourusername/atlasblog-api.git
+
+cd atlasblog-api
+```
 
 ---
 
-### 2. Create a virtual environment
+## 2. Create a Virtual Environment
 
-<pre>
+### Windows
+
+```bash
 python -m venv venv
-</pre>
 
-Activate it:
-
-- Windows:
-<pre>
 venv\Scripts\activate
-</pre>
+```
 
-- Mac/Linux:
-<pre>
+### Linux / macOS
+
+```bash
+python -m venv venv
+
 source venv/bin/activate
-</pre>
+```
 
 ---
 
-### 3. Install dependencies
+## 3. Install Dependencies
 
-<pre>
+```bash
 pip install -r requirements.txt
-</pre>
+```
 
 ---
 
-### 4. Set up MongoDB
+# 🌍 Environment Variables
 
-This project uses **MongoDB Atlas (cloud database)**.
+Create a `.env` file in the project root:
 
-Steps:
-1. Sign up or log in at https://www.mongodb.com/atlas
-2. Create a free cluster
-3. Create a database user (username + password)
-4. Copy your connection string (URI)
-
-Example `.env` file:
-
-<pre>
-MONGO_URI=mongodb+srv://username:password@cluster0.mongodb.net/
-</pre>
-
----
-
-### 5. Run the application
-
-<pre>
-python app.py OR flask run
-</pre>
-
-Server will run at:
-<pre>
-http://127.0.0.1:5000
-</pre>
-
----
-
-## 📬 API Usage (Postman Guide)
-
-You can test this API using **Postman** (free tool for API testing):
-https://www.postman.com/
-
-### 1. Create a Post
-
-**POST** `/posts`
-
-<pre>
-{
-  "title": "My First Post",
-  "content": "Hello world",
-  "category": "Tech",
-  "tags": ["python", "flask"]
-}
-</pre>
-
----
-
-### 2. Get All Posts
-
-**GET** `/posts`
-
-Optional search:
-<pre>
-/posts?term=tech
-</pre>
-
----
-
-### 3. Get Single Post
-
-**GET** `/posts/<int:_id>`
+```env
+MONGO_URI=your_mongodb_connection_string
+```
 
 Example:
-<pre>
-/posts/1
-</pre>
+
+```env
+MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/
+```
+
+The application loads this value automatically using `python-dotenv`.
 
 ---
 
-### 4. Update Post
+# 🗄 MongoDB Database
 
-**PUT** `/posts/1`
+The application creates and uses:
 
-You can update one or many fields:
+```text
+Database:
+rdmpsh-blog
 
-<pre>
+Collection:
+blog-posts
+```
+
+Each blog post follows this structure:
+
+```json
+{
+  "id": 1,
+  "title": "My First Post",
+  "content": "Hello World",
+  "category": "Technology",
+  "tags": ["python", "flask"],
+  "createdAt": "2026-06-03 15:30:00",
+  "updatedAt": "Null"
+}
+```
+
+---
+
+# ▶ Running the Application
+
+Start the server:
+
+```bash
+python app.py
+```
+
+or
+
+```bash
+flask run
+```
+
+The API will be available at:
+
+```text
+http://127.0.0.1:5000
+```
+
+or
+
+```text
+localhost:5000/
+```
+
+---
+
+# 📬 API Endpoints
+
+---
+
+## Create a Blog Post
+
+### POST `/posts`
+
+Creates a new blog post.
+
+### Request Body
+
+```json
+{
+  "title": "Learning Flask",
+  "content": "Flask is a lightweight Python framework.",
+  "category": "Programming",
+  "tags": ["python", "flask"]
+}
+```
+
+### Success Response
+
+```json
+{
+  "id": 1,
+  "title": "Learning Flask",
+  "content": "Flask is a lightweight Python framework.",
+  "category": "Programming",
+  "tags": ["python", "flask"],
+  "createdAt": "2026-06-03 15:30:00",
+  "updatedAt": "Null"
+}
+```
+
+### Status Code
+
+```text
+201 Created
+```
+
+---
+
+## Retrieve All Posts
+
+### GET `/posts`
+
+Returns every blog post stored in the database.
+
+### Browser Example
+
+```text
+localhost:5000/posts
+```
+
+### Status Code
+
+```text
+200 OK
+```
+
+---
+
+## Search Posts
+
+### GET `/posts?term=python`
+
+Searches:
+
+- Title
+- Content
+- Category
+
+### Browser Example
+
+```text
+localhost:5000/posts?term=python
+```
+
+### Status Code
+
+```text
+200 OK
+```
+
+---
+
+## Retrieve a Single Post
+
+### GET `/posts/<id>`
+
+Example:
+
+```text
+GET /posts/1
+```
+
+Browser:
+
+```text
+localhost:5000/posts/1
+```
+
+### Status Code
+
+```text
+200 OK
+```
+
+---
+
+## Update a Post
+
+### PUT `/posts/<id>`
+
+AtlasBlog supports partial updates.
+
+Example:
+
+```json
 {
   "title": "Updated Title"
 }
-</pre>
+```
+
+Only the supplied field is modified.
+
+Example:
+
+```text
+PUT /posts/1
+```
+
+### Success Response
+
+```json
+{
+  "id": 1,
+  "title": "Updated Title",
+  "content": "Flask is a lightweight Python framework.",
+  "category": "Programming",
+  "tags": ["python", "flask"],
+  "createdAt": "2026-06-03 15:30:00",
+  "updatedAt": "2026-06-04 09:15:00"
+}
+```
+
+### Status Code
+
+```text
+200 OK
+```
 
 ---
 
-### 5. Delete Post
+## Delete a Post
 
-**DELETE** `/posts/1`
+### DELETE `/posts/<id>`
 
-Returns:
-- `204 No Content` if successful
-- `404` if not found
+Example:
 
----
+```text
+DELETE /posts/1
+```
 
-## 🧠 Important Notes
+### Success Status
 
-- MongoDB URI must be added to `.env`
-- IDs are auto-incremented manually
-- Search is case-insensitive
-- Update supports partial updates (PATCH-like behaviour via PUT)
-- Postman recommended for testing
+```text
+204 No Content
+```
 
 ---
 
-## 📊 Roadmap.sh Project
+# 🚀 Postman Usage
 
-This project was built as part of:
+Postman provides a simple way to test every endpoint.
 
-👉 https://roadmap.sh/projects/blogging-platform-api
+### Create a Post
+
+1. Select POST
+2. Enter:
+
+```text
+localhost:5000/posts
+```
+
+3. Choose:
+
+```text
+Body → Raw → JSON
+```
+
+4. Paste:
+
+```json
+{
+  "title": "My First Post",
+  "content": "Hello World",
+  "category": "Technology",
+  "tags": ["python", "mongodb"]
+}
+```
+
+5. Click Send
 
 ---
 
-## 📄 Licence
+# 💻 cURL Examples
 
-MIT Licence — free to use, modify, and distribute.
+## Create a Post
+
+```bash
+curl -X POST localhost:5000/posts \
+-H "Content-Type: application/json" \
+-d '{
+"title":"My First Post",
+"content":"Hello World",
+"category":"Technology",
+"tags":["python","mongodb"]
+}'
+```
 
 ---
 
-## Footnote
+## Get All Posts
 
-<div align="center" style="border: 1px solid green; padding: 10px; border-radius: 5px;">
-  <p>🗣️ Feel free to follow, connect, and chat!</p>
-  <a class="header-badge" target="_blank" href="https://github.com/Sheikh-H"><img src="https://img.shields.io/badge/GitHub-376e00?style=flat&logo=github&logoColor=white" alt="GitHub">
-  </a><a class="header-badge" target="_blank" href="https://www.linkedin.com/in/sheikh-hussain/"><img src="https://img.shields.io/badge/LinkedIn-376e00?style=flat&logo=LinkedIn&logoColor=white" alt="LinkedIn">
-  </a><a class="header-badge" target="_blank" href="mailto:sheikh.hussain1155@gmail.com"><img src="https://img.shields.io/badge/Gmail-376e00?style=flat&logo=gmail&logoColor=white" alt="Gmail">
-  </a><a class="header-badge" target="_blank" href="https://sheikh-h.github.io/"><img src="https://img.shields.io/badge/Portfolio-376e00?style=flat&logo=github&logoColor=white" alt="Portfolio">
-  </a>
-</div>
+```bash
+curl localhost:5000/posts
+```
+
+---
+
+## Get a Single Post
+
+```bash
+curl localhost:5000/posts/1
+```
+
+---
+
+## Search Posts
+
+```bash
+curl "localhost:5000/posts?term=python"
+```
+
+---
+
+## Update a Post
+
+```bash
+curl -X PUT localhost:5000/posts/1 \
+-H "Content-Type: application/json" \
+-d '{
+"title":"Updated Post Title"
+}'
+```
+
+---
+
+## Delete a Post
+
+```bash
+curl -X DELETE localhost:5000/posts/1
+```
+
+---
+
+# 🔍 Function Breakdown
+
+## Database Functions (`services/db.py`)
+
+### add_post()
+
+Creates a new blog post and stores it in MongoDB.
+
+### get_post()
+
+Retrieves a single blog post by its ID.
+
+### get_posts()
+
+Returns every blog post from the collection.
+
+### update_post()
+
+Updates one or more fields and refreshes the `updatedAt` timestamp.
+
+### delete_post()
+
+Removes a blog post from the database.
+
+### search_posts()
+
+Searches title, content and category fields using MongoDB regular expressions.
+
+---
+
+## Route Functions (`app.py`)
+
+### POST `/posts`
+
+Validates request data before creating a post.
+
+### GET `/posts`
+
+Returns all posts or performs a search if a term is supplied.
+
+### GET `/posts/<id>`
+
+Returns a single blog post.
+
+### PUT `/posts/<id>`
+
+Updates selected fields of a blog post.
+
+### DELETE `/posts/<id>`
+
+Deletes a blog post by ID.
+
+---
+
+# ⚠ Error Responses
+
+Examples:
+
+### Missing Required Fields
+
+```json
+{
+  "error": "unable to add post, please use all required fields"
+}
+```
+
+### Post Not Found
+
+```json
+{
+  "error": "post not found"
+}
+```
+
+### Invalid Update Request
+
+```json
+{
+  "error": "unable to update"
+}
+```
+
+---
+
+# 🛡 Rate Limiting
+
+AtlasBlog uses Flask-Limiter to restrict traffic.
+
+Current configuration:
+
+```text
+50 requests per hour
+```
+
+Applied to:
+
+- POST /posts
+- GET /posts
+- GET /posts/<id>
+- DELETE /posts/<id>
+
+This helps prevent accidental or excessive API usage.
+
+---
+
+# 🔮 Future Improvements
+
+Potential enhancements include:
+
+- User authentication
+- JWT authorisation
+- User accounts
+- Pagination
+- Sorting and filtering
+- Comment system
+- Categories collection
+- API versioning
+- Docker support
+- Automated testing
+- Swagger/OpenAPI documentation
+
+---
+
+# 🎯 Roadmap.sh Project
+
+This project was built as part of the <a href="https://roadmap.sh/projects/blogging-platform-api" target="_blank">Blogging Platform API</a> project from roadmap.sh.
+
+The goal was to design and implement a fully functional REST API capable of managing blog content using modern backend development practices.
+
+---
+
+# 📄 Licence
+
+This project is licensed under the MIT Licence - see the `LICENSE` file for full details.
+
+```text
+MIT Licence
+
+Copyright (c) 2026 Sheikh Hussain
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
+---
+
+# 🤝 Connect With Me
 
 <div align="center">
-  <a href="https://www.linkedin.com/in/sheikh-hussain/" target="_blank">By Sheikh Hussain 💚</a>  
+
+<a href="https://github.com/Sheikh-H">
+<img src="https://img.shields.io/badge/GitHub-376e00?style=flat&logo=github&logoColor=white" alt="GitHub">
+</a>
+
+<a href="https://www.linkedin.com/in/sheikh-hussain/">
+<img src="https://img.shields.io/badge/LinkedIn-376e00?style=flat&logo=linkedin&logoColor=white" alt="LinkedIn">
+</a>
+
+<a href="mailto:sheikh.hussain1155@gmail.com">
+<img src="https://img.shields.io/badge/Gmail-376e00?style=flat&logo=gmail&logoColor=white" alt="Gmail">
+</a>
+
+<a href="https://sheikh-h.github.io/">
+<img src="https://img.shields.io/badge/Portfolio-376e00?style=flat&logo=github&logoColor=white" alt="Portfolio">
+</a>
+
 </div>
 
 ---
 
-<h2 align="center">⭐ If you like this project, please give it a star on GitHub!</h2>
+<p align="center">
+Built with Python, Flask and MongoDB by <strong>Sheikh Hussain</strong> 💚
+</p>
+
+<p align="center">
+⭐ If you found this project useful, consider giving it a star on GitHub.
+</p>
