@@ -1,4 +1,4 @@
-# 📚 AtlasBlog API
+# 📚 Blog API
 
 <p align="center">
   <strong>A RESTful blogging platform API built with Flask and MongoDB.</strong><br>
@@ -9,7 +9,7 @@
 
 ## 📖 Overview
 
-AtlasBlog API is a RESTful backend application that provides all the core functionality required to power a blogging platform.
+Blog API is a RESTful backend application that provides all the core functionality required to power a blogging platform.
 
 The application allows users to create, retrieve, update, delete and search blog posts while storing data in MongoDB. It was built using Flask and follows a simple separation-of-concerns architecture where route handling and database operations are kept separate.
 
